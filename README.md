@@ -9,24 +9,23 @@ This project is a proof-of-concept for a Go-based LinkedIn automation tool using
     *   Graceful handling of login failures and security checkpoints.
     *   Persistence and reuse of session cookies.
 *   **Search & Targeting**:
-    *   Search users by job title, company, location, and keywords.
-    *   Efficient parsing and collection of profile URLs.
-    *   Handling pagination across search results.
+    *   Search users by job title - Software Engineer.
+    *   Efficient parsing and collection of profile URLs through click mechanism.
     *   Basic duplicate profile detection.
 *   **Connection Requests**:
-    *   Navigation to user profiles.
+    *   Navigation to user profiles via click.
     *   Targeted clicking of the "Connect" button.
-    *   Sending personalized notes within character limits.
+    *   Sending personalized notes within character limit of 200.
     *   Tracking sent requests and enforcing daily limits using SQLite.
 *   **Messaging System**:
-    *   Sending follow-up messages automatically to "accepted" connections.
+    *   Sending follow-up messages automatically to "accepted" connections from message section.
     *   Support for templates with dynamic variables.
     *   Comprehensive message tracking using SQLite.
 *   **Anti-Bot Detection Strategy**:
-    *   **Human-like Mouse Movement**: Basic simulation (more advanced implementation is a TODO).
+    *   **Human-like Mouse Movement**: Basic simulation is done for mouse randomness.
     *   **Randomized Timing Patterns**: Random delays between actions.
     *   **Browser Fingerprint Masking**: Applied on a *per-page basis* by injecting JavaScript to modify user agent strings, adjust viewport dimensions, and disable automation flags (`navigator.webdriver`).
-    *   **Random Scrolling Behavior**: Variable scroll speeds and micro-pauses.
+    *   **Random Scrolling Behavior**: Variable and random scroll speeds and micro-pauses.
     *   **Realistic Typing Simulation**: Varying keystroke intervals.
 *   **Code Quality Standards**:
     *   Modular Architecture (organized into packages: `authentication`, `search`, `messaging`, `stealth`, `config`, `storage`).
@@ -86,7 +85,7 @@ The application can be configured using a `config.yaml` file or environment vari
 
 #### `config.yaml` Example:
 
-Create a `config.yaml` file in the project root:
+ Rewrite`config.yaml` file in the project root:
 
 ```yaml
 linkedin:
@@ -121,20 +120,6 @@ The tool will:
 1.  Load configuration.
 2.  Launch a browser.
 3.  Attempt to log in to LinkedIn (using saved cookies if available), applying per-page stealth.
-4.  Perform a sample search for "Software Engineer" in "San Francisco Bay Area" with "Go" and "Golang" keywords, applying per-page stealth.
+4.  Perform a sample search for "Software Engineer" keyword, applying per-page stealth.
 5.  Send connection requests to found profiles (up to a daily limit, and avoiding duplicates), applying per-page stealth.
 6.  Simulate accepted connections and send follow-up messages, applying per-page stealth.
-
-## Current Limitations / TODOs
-
-*   **Rod API Challenges for Global Stealth**: Due to unexpected behavior and undefined methods (`browser.SetUserAgent`, `browser.SetViewport`, `browser.EvalOnNewDocument`) on the `rod.Browser` object in this specific environment, browser fingerprinting is currently implemented on a *per-page basis* by injecting JavaScript. A more robust, global solution would be preferred if environment constraints allow.
-*   **Human-like Mouse Movement**: This feature is currently disabled due to persistent Rod API limitations in this environment regarding precise mouse control. Ideally, it would involve sophisticated Bézier curve implementations with overshoot and micro-corrections.
-*   **LinkedIn UI Changes**: LinkedIn's UI changes frequently, which can break element selectors. The current selectors are illustrative and may need updates.
-*   **Advanced Anti-Bot Techniques**: Further enhancements for anti-bot detection could include WebGL fingerprinting, canvas fingerprinting, and more dynamic manipulation of browser properties.
-*   **Error Handling**: While basic error handling is in place, more graceful degradation and retry mechanisms could be added for specific scenarios (e.g., network issues, temporary LinkedIn errors).
-*   **Dynamic Data Extraction**: For sending personalized messages, extracting the recipient's name from their profile page is a crucial step that is currently simulated.
-*   **"New Connection" Detection**: The `DetectNewConnections` function is a placeholder; real-world implementation requires robust scraping of LinkedIn notifications or the "My Network" page, which is highly fragile.
-
-## License
-
-This project is licensed under the MIT License.
